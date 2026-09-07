@@ -732,7 +732,8 @@ html,body,#network{background:var(--network-page);color:var(--network-text)}#sid
     <div class="sectionBody">
       <div class="viewSettingsGrid">
         <label class="viewSetting" for="nodeFontSize"><span class="viewSettingHeader"><span>Label size</span><output id="nodeFontSizeValue" class="viewSettingValue">13 px</output></span><input id="nodeFontSize" type="range" min="9" max="24" step="1" value="13"></label>
-        <label class="viewSetting" for="nodeFontFamily"><span class="viewSettingHeader"><span>Label font</span></span><select id="nodeFontFamily"><option value="Inter, Segoe UI, Yu Gothic UI, Meiryo, Arial, sans-serif">System sans-serif</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option><option value="Consolas, monospace">Consolas</option></select></label>
+        <label class="check" for="nodeFontBold"><input id="nodeFontBold" type="checkbox">Bold labels</label>
+        <label class="viewSetting" for="nodeFontFamily"><span class="viewSettingHeader"><span>Label font</span></span><select id="nodeFontFamily"><option value="Inter, Segoe UI, Yu Gothic UI, Meiryo, Arial, sans-serif">System sans-serif</option><option value="Arial, sans-serif">Arial</option><option value="Helvetica, Arial, sans-serif">Helvetica</option><option value="Century, Georgia, serif">Century</option><option value="Times New Roman, Times, serif">Times New Roman</option><option value="Georgia, serif">Georgia</option><option value="Consolas, monospace">Consolas</option></select></label>
         <label class="viewSetting" for="nodeSizeScale"><span class="viewSettingHeader"><span>Circle size</span><output id="nodeSizeScaleValue" class="viewSettingValue">100%</output></span><input id="nodeSizeScale" type="range" min="0.6" max="2" step="0.05" value="1"></label>
       </div>
       <button id="resetViewSettings" class="secondary viewSettingsReset">Reset view settings</button>
@@ -783,10 +784,10 @@ const layerOrder=['citation','semantic','claim','property','method','keyword','k
 const baseMembership=Object.fromEntries(baseNodeArray.map(n=>[n.id,Number(n.cluster)]));
 const basePositions=Object.fromEntries(baseNodeArray.map(n=>[n.id,{x:Number(n.x||0),y:Number(n.y||0)}]));
 const baseClusteringLayers=layerOrder.filter(name=>rawEdges.some(e=>Number((e.components||{})[name]||0)>0));
-const defaultViewSettings={fontSize:13,fontFace:'Inter, Segoe UI, Yu Gothic UI, Meiryo, Arial, sans-serif',nodeScale:1};
-const allowedNodeFonts=new Set([defaultViewSettings.fontFace,'Arial, sans-serif','Georgia, serif','Consolas, monospace']);
+const defaultViewSettings={fontBold:false,fontSize:13,fontFace:'Inter, Segoe UI, Yu Gothic UI, Meiryo, Arial, sans-serif',nodeScale:1};
+const allowedNodeFonts=new Set([defaultViewSettings.fontFace,'Arial, sans-serif','Helvetica, Arial, sans-serif','Century, Georgia, serif','Times New Roman, Times, serif','Georgia, serif','Consolas, monospace']);
 const viewSettingsStorageKey=`litnodex.network.viewSettings.${projectSlug}`;
-function loadViewSettings(){try{const saved=JSON.parse(localStorage.getItem(viewSettingsStorageKey)||'{}');return{fontSize:clamp(Number(saved.fontSize)||defaultViewSettings.fontSize,9,24),fontFace:allowedNodeFonts.has(saved.fontFace)?saved.fontFace:defaultViewSettings.fontFace,nodeScale:clamp(Number(saved.nodeScale)||defaultViewSettings.nodeScale,.6,2)};}catch(_error){return{...defaultViewSettings};}}
+function loadViewSettings(){try{const saved=JSON.parse(localStorage.getItem(viewSettingsStorageKey)||'{}');return{fontBold:saved.fontBold===true,fontSize:clamp(Number(saved.fontSize)||defaultViewSettings.fontSize,9,24),fontFace:allowedNodeFonts.has(saved.fontFace)?saved.fontFace:defaultViewSettings.fontFace,nodeScale:clamp(Number(saved.nodeScale)||defaultViewSettings.nodeScale,.6,2)};}catch(_error){return{...defaultViewSettings};}}
 let viewSettings=loadViewSettings();
 let currentMembership={...baseMembership};
 let currentClusters=JSON.parse(JSON.stringify(baseClusters));
@@ -949,21 +950,21 @@ function updateNodeAppearance(selected){
   const updates=baseNodeArray.map(n=>{
     const cid=Number(currentMembership[n.id]??0);const meta=nodeMeta[n.id];meta.cluster_id=cid;meta.cluster_label=(currentClusters.find(c=>Number(c.cluster_id)===cid)||{}).label||`cluster ${cid+1}`;
     const revealed=!historyActive||historyNodeRevealed(n.id),fill=clusterColors[cid]||'#8b5cf6',border=nodeBorder(meta);
-    return{id:n.id,cluster:cid,value:8+Math.min(24,6*Math.log1p(degree[n.id]||0)),font:{color:fontColor,size:viewSettings.fontSize,face:viewSettings.fontFace},borderWidthSelected:5,color:{background:hexToRgba(fill,revealed?1:.12),border:hexToRgba(border,revealed?1:.12),highlight:{background:'#fef08a',border:'#ffffff'}}};
+    return{id:n.id,cluster:cid,value:8+Math.min(24,6*Math.log1p(degree[n.id]||0)),label:viewSettings.fontBold?`<b>${esc(n.label)}</b>`:n.label,font:{color:fontColor,size:viewSettings.fontSize,face:viewSettings.fontFace,multi:viewSettings.fontBold?'html':false,bold:{color:fontColor,face:viewSettings.fontFace,size:viewSettings.fontSize,mod:'bold'}},borderWidthSelected:5,color:{background:hexToRgba(fill,revealed?1:.12),border:hexToRgba(border,revealed?1:.12),highlight:{background:'#fef08a',border:'#ffffff'}}};
   });
   nodes.update(updates);
 }
 
 function applyViewSettings(persist=true){
-  const fontSize=document.getElementById('nodeFontSize'),fontFamily=document.getElementById('nodeFontFamily'),nodeScale=document.getElementById('nodeSizeScale');
-  viewSettings={fontSize:clamp(Number(fontSize.value)||defaultViewSettings.fontSize,9,24),fontFace:allowedNodeFonts.has(fontFamily.value)?fontFamily.value:defaultViewSettings.fontFace,nodeScale:clamp(Number(nodeScale.value)||defaultViewSettings.nodeScale,.6,2)};
-  document.getElementById('nodeFontSizeValue').textContent=`${Math.round(viewSettings.fontSize)} px`;document.getElementById('nodeSizeScaleValue').textContent=`${Math.round(viewSettings.nodeScale*100)}%`;fontFamily.style.fontFamily=viewSettings.fontFace;
+  const fontSize=document.getElementById('nodeFontSize'),fontFamily=document.getElementById('nodeFontFamily'),fontBold=document.getElementById('nodeFontBold'),nodeScale=document.getElementById('nodeSizeScale');
+  viewSettings={fontBold:fontBold.checked,fontSize:clamp(Number(fontSize.value)||defaultViewSettings.fontSize,9,24),fontFace:allowedNodeFonts.has(fontFamily.value)?fontFamily.value:defaultViewSettings.fontFace,nodeScale:clamp(Number(nodeScale.value)||defaultViewSettings.nodeScale,.6,2)};
+  document.getElementById('nodeFontSizeValue').textContent=`${Math.round(viewSettings.fontSize)} px`;document.getElementById('nodeSizeScaleValue').textContent=`${Math.round(viewSettings.nodeScale*100)}%`;fontFamily.style.fontFamily=viewSettings.fontFace;fontFamily.style.fontWeight=viewSettings.fontBold?'700':'400';
   network.setOptions({nodes:{scaling:{min:7*viewSettings.nodeScale,max:31*viewSettings.nodeScale}}});updateNodeAppearance(activeLayers());network.redraw();
   if(persist)localStorage.setItem(viewSettingsStorageKey,JSON.stringify(viewSettings));
 }
 function setupViewSettings(){
-  const fontSize=document.getElementById('nodeFontSize'),fontFamily=document.getElementById('nodeFontFamily'),nodeScale=document.getElementById('nodeSizeScale');fontSize.value=String(viewSettings.fontSize);fontFamily.value=viewSettings.fontFace;nodeScale.value=String(viewSettings.nodeScale);applyViewSettings(false);
-  fontSize.addEventListener('input',()=>applyViewSettings());fontFamily.addEventListener('change',()=>applyViewSettings());nodeScale.addEventListener('input',()=>applyViewSettings());document.getElementById('resetViewSettings').onclick=()=>{viewSettings={...defaultViewSettings};fontSize.value=String(viewSettings.fontSize);fontFamily.value=viewSettings.fontFace;nodeScale.value=String(viewSettings.nodeScale);applyViewSettings();};
+  const fontSize=document.getElementById('nodeFontSize'),fontFamily=document.getElementById('nodeFontFamily'),fontBold=document.getElementById('nodeFontBold'),nodeScale=document.getElementById('nodeSizeScale');fontSize.value=String(viewSettings.fontSize);fontFamily.value=viewSettings.fontFace;fontBold.checked=viewSettings.fontBold;nodeScale.value=String(viewSettings.nodeScale);applyViewSettings(false);
+  fontBold.addEventListener('change',()=>applyViewSettings());fontSize.addEventListener('input',()=>applyViewSettings());fontFamily.addEventListener('change',()=>applyViewSettings());nodeScale.addEventListener('input',()=>applyViewSettings());document.getElementById('resetViewSettings').onclick=()=>{viewSettings={...defaultViewSettings};fontSize.value=String(viewSettings.fontSize);fontFamily.value=viewSettings.fontFace;fontBold.checked=viewSettings.fontBold;nodeScale.value=String(viewSettings.nodeScale);applyViewSettings();};
 }
 
 function applyLayerView(){

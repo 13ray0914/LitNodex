@@ -1,3 +1,3 @@
 """LitNodex package metadata."""
 
-__version__ = "4.4.2"
+__version__ = "1.0.0"
