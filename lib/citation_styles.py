@@ -77,7 +77,7 @@ def _journal_text(record: dict[str, Any]) -> str:
         return plain_text(_ISO4_ABBREVIATOR(journal, remove_part=True)) or journal
     except Exception:
         # Citation export remains available in minimal/source-only environments;
-        # normal FolioSort installations include pyiso4.
+        # normal LitNodex installations include pyiso4.
         return journal
 
 

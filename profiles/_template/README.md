@@ -1,6 +1,6 @@
 # Creating another literature-review domain profile
 
-FolioSort's processing code is domain-independent as long as a profile preserves these top-level contracts:
+LitNodex's processing code is domain-independent as long as a profile preserves these top-level contracts:
 
 - `inventory.schema.json`: `article_type`, `objectives`, `systems`, `methods`, `studied_properties`, `global_conditions`
 - `evidence.schema.json`: `measurements`, `claims`, `limitations`, `citation_contexts`

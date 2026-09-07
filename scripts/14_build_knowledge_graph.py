@@ -49,7 +49,7 @@ from lib.pipeline_common import (
 from lib.projects import ensure_project_schema, normalize_project_slug, project_knowledge_dir, project_name, project_rows
 from lib.v4_common import ensure_v4_schema, now_iso
 from lib.web_security import html_script_json
-from foliosort import __version__
+from litnodex import __version__
 
 SCRIPT_VERSION = f"knowledge-graph-v{__version__}-security-hardened"
 

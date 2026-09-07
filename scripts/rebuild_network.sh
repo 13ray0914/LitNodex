@@ -17,7 +17,7 @@ if [[ "${REVIEW_PIPELINE_LOCKED:-0}" != "1" ]]; then
   fi
   rc=$?
   if [[ "$rc" -eq 200 ]]; then
-    echo "[$(date '+%F %T')] Another FolioSort process is already running."
+    echo "[$(date '+%F %T')] Another LitNodex process is already running."
     exit 200
   fi
   exit "$rc"
@@ -31,7 +31,7 @@ cd "$ROOT"
   exit 2
 }
 
-_FS_VERSION="$("$NETWORK_PYTHON" -c 'from foliosort import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
+_FS_VERSION="$("$NETWORK_PYTHON" -c 'from litnodex import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
 echo
 echo "========== Literature Network rebuild v${_FS_VERSION} $(date '+%F %T') =========="
 echo "Project scope: $PROJECT"

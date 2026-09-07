@@ -4,7 +4,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foliosort import __version__
+from litnodex import __version__
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,7 +75,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
     def test_network_sections_are_independently_expandable_and_exports_are_available(self) -> None:
         source = self.read("scripts/13_build_multiplex_network.py")
 
-        self.assertIn("foliosort.network.openSections", source)
+        self.assertIn("litnodex.network.openSections", source)
         self.assertNotIn("if(other!==details)other.open=false", source)
         self.assertEqual(source.count('data-section="clusters"'), 1)
         self.assertNotIn('data-section="recluster"', source)
@@ -133,7 +133,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
 
         self.assertIn('class="versionBadge">Version __APP_VERSION__', source)
         self.assertIn('id="themeToggle"', source)
-        self.assertIn("foliosort-theme", source)
+        self.assertIn("litnodex-theme", source)
         self.assertIn("data-theme=\"light\"", source)
         self.assertIn('class="brandMark"', source)
         self.assertIn('id="projectTab"', source)
@@ -142,7 +142,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
         self.assertIn('id="settingsTab"', source)
         self.assertIn('id="projectView"', source)
         self.assertIn('id="settingsView"', source)
-        self.assertIn("foliosort-tab", source)
+        self.assertIn("litnodex-tab", source)
         self.assertLess(source.index('class="card projectCard"'), source.index('class="card results"'))
         self.assertLess(source.index('class="card results"'), source.index('class="card pipelineCard"'))
         self.assertLess(source.index('class="card pipelineCard"'), source.index('id="settingsView"'))
@@ -219,33 +219,33 @@ class ReleaseConfigurationTests(unittest.TestCase):
             source,
         )
 
-    def test_windows_shortcut_uses_the_foliosort_icon(self) -> None:
+    def test_windows_shortcut_uses_the_litnodex_icon(self) -> None:
         source = self.read("scripts/install_windows_app.sh")
 
-        self.assertIn('ICON="$ROOT/assets/foliosort.ico"', source)
+        self.assertIn('ICON="$ROOT/assets/litnodex.ico"', source)
         self.assertIn("$s.IconLocation = $Icon + ',0'", source)
-        self.assertTrue((ROOT / "assets" / "foliosort.ico").exists())
-        self.assertTrue((ROOT / "assets" / "foliosort-icon.png").exists())
+        self.assertTrue((ROOT / "assets" / "litnodex.ico").exists())
+        self.assertTrue((ROOT / "assets" / "litnodex-icon.png").exists())
 
     def test_tagged_releases_publish_source_archives_and_windows_installer(self) -> None:
         workflow = self.read(".github/workflows/ci.yml")
-        installer = self.read("windows/installer/FolioSort.iss")
+        installer = self.read("windows/installer/LitNodex.iss")
         install_wsl = self.read("windows/installer/install_wsl.ps1")
-        launcher = self.read("windows/installer/launch_foliosort.ps1")
+        launcher = self.read("windows/installer/launch_litnodex.ps1")
         readme = self.read("README.md")
 
         self.assertIn("windows-installer:", workflow)
         self.assertIn("runs-on: windows-latest", workflow)
         self.assertIn("choco install innosetup --version=6.7.1", workflow)
-        self.assertIn('OutputBaseFilename=FolioSort-{#MyVersion}-setup', installer)
-        self.assertIn("FolioSort-v${TAG_VERSION}-source.zip", workflow)
-        self.assertIn("FolioSort-v${TAG_VERSION}-source.tar.gz", workflow)
+        self.assertIn('OutputBaseFilename=LitNodex-{#MyVersion}-setup', installer)
+        self.assertIn("LitNodex-v${TAG_VERSION}-source.zip", workflow)
+        self.assertIn("LitNodex-v${TAG_VERSION}-source.tar.gz", workflow)
         self.assertIn("SHA256SUMS.txt", workflow)
         self.assertIn("actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", workflow)
         self.assertIn("actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093", workflow)
         self.assertIn('wsl.exe -d $distro -- bash -lc $installScript', install_wsl)
         self.assertIn('bash scripts/start_review_app.sh', launcher)
-        self.assertIn("FolioSort-X.Y.Z-setup.exe", readme)
+        self.assertIn("LitNodex-X.Y.Z-setup.exe", readme)
         self.assertIn("SHA256SUMS.txt", readme)
 
 

@@ -1,18 +1,18 @@
-# FolioSort
+# LitNodex
 
-[![CI](https://github.com/13ray0914/FolioSort/actions/workflows/ci.yml/badge.svg)](https://github.com/13ray0914/FolioSort/actions/workflows/ci.yml)
+[![CI](https://github.com/13ray0914/LitNodex/actions/workflows/ci.yml/badge.svg)](https://github.com/13ray0914/LitNodex/actions/workflows/ci.yml)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL--3.0--or--later-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-4.4.0-8b5cf6.svg)](https://github.com/13ray0914/FolioSort/releases)
+[![Version](https://img.shields.io/badge/version-4.4.2-8b5cf6.svg)](https://github.com/13ray0914/LitNodex/releases)
 
-FolioSort is a local-first, evidence-traceable literature review workspace. It turns a collection of scientific PDFs into structured claims, measurements, review reports, literature networks, and a scientific knowledge graph while preserving links back to the source sentences and visual evidence.
+LitNodex is a local-first, evidence-traceable literature review workspace. It turns a collection of scientific PDFs into structured claims, measurements, review reports, literature networks, and a scientific knowledge graph while preserving links back to the source sentences and visual evidence.
 
 > [日本語README](README_JA.md) · [v4の詳細な日本語ガイド](README_V4_JA.md)
 
 <img width="1919" height="1059" alt="Image" src="https://github.com/user-attachments/assets/822d95df-2457-437b-b2f1-8b584214ec2a" />
 
-## Why FolioSort?
+## Why LitNodex?
 
-LLM-generated summaries are difficult to audit when their statements cannot be traced to the original paper. FolioSort assigns stable IDs to papers, sentences, figures, tables, equations, claims, and measurements so that a review statement can be traced in reverse:
+LLM-generated summaries are difficult to audit when their statements cannot be traced to the original paper. LitNodex assigns stable IDs to papers, sentences, figures, tables, equations, claims, and measurements so that a review statement can be traced in reverse:
 
 ```text
 review statement
@@ -69,17 +69,17 @@ Optional components include SPECTER2, MinerU, and a separate multimodal llama.cp
 
 ### Local Qwen hardware requirements
 
-The automatic launcher is tuned for **Qwen3.8-27B Q4_K_M** with the Q4_0 MTP draft model, full GPU offload, one request slot, Flash Attention, and a 65,536-token context. The two GGUF files used by the current default are approximately 17 GB and 1.6 GB. Qwen's official model card describes the model as a 27B dense model with a native 262,144-token context; FolioSort deliberately uses a smaller context to control memory use. See the [official Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B) and [llama.cpp server options](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
+The automatic launcher is tuned for **Qwen3.8-27B Q4_K_M** with the Q4_0 MTP draft model, full GPU offload, one request slot, Flash Attention, and a 65,536-token context. The two GGUF files used by the current default are approximately 17 GB and 1.6 GB. Qwen's official model card describes the model as a 27B dense model with a native 262,144-token context; LitNodex deliberately uses a smaller context to control memory use. See the [official Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B) and [llama.cpp server options](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
 
 | Resource | Practical minimum for the default | Recommended | Notes |
 |---|---:|---:|---|
 | GPU | NVIDIA CUDA-capable GPU | Recent NVIDIA GPU | CPU-only and partial-offload execution are possible in llama.cpp but are much slower for this workflow. |
 | VRAM | 24 GB | 32 GB or more | The tested RTX 4090 run used about 23.3/24.0 GiB. Other llama.cpp builds and display use can require extra headroom. |
 | System RAM | 32 GB | 64 GB or more | Use at least 64 GB when partially offloading to CPU, running other local models, or processing many large PDFs. |
-| Free disk | 25 GB for llama.cpp and the two GGUF files | 40 GB or more plus PDF/output space | FolioSort research data, GROBID images, embeddings, and backups need additional space. |
+| Free disk | 25 GB for llama.cpp and the two GGUF files | 40 GB or more plus PDF/output space | LitNodex research data, GROBID images, embeddings, and backups need additional space. |
 | CPU | Modern x86-64 CPU with AVX2, 8 cores | 12+ cores | CPU is used for parsing, validation, graph construction, and any layers not offloaded to the GPU. |
 
-These figures are deployment guidance, not a guarantee: model quantization, context length, llama.cpp revision, KV-cache type, batch size, and GPU display usage all change memory consumption. The default `-c 65536` reserves substantially more cache than a shorter context. If 24 GB VRAM is insufficient, first stop other GPU applications, then try `-c 32768`; reducing it further can reject FolioSort's longer requests. Changing the launcher command requires editing `scripts/run_review_pipeline.sh`.
+These figures are deployment guidance, not a guarantee: model quantization, context length, llama.cpp revision, KV-cache type, batch size, and GPU display usage all change memory consumption. The default `-c 65536` reserves substantially more cache than a shorter context. If 24 GB VRAM is insufficient, first stop other GPU applications, then try `-c 32768`; reducing it further can reject LitNodex's longer requests. Changing the launcher command requires editing `scripts/run_review_pipeline.sh`.
 
 The launcher reads these environment variables, so custom locations do not require editing source files:
 
@@ -89,22 +89,22 @@ export QWEN_MODEL="$HOME/models/Qwen3.8-27B/Qwen3.8-27B-Q4_K_M.gguf"
 export QWEN_DRAFT_MODEL="$HOME/models/Qwen3.8-27B/mtp-Qwen3.8-27B-Q4_0.gguf"
 ```
 
-The Qwen weights and llama.cpp binary are not installed by the FolioSort Python package.
+The Qwen weights and llama.cpp binary are not installed by the LitNodex Python package.
 
 ## Download a release
 
-Each tagged version is published on the [GitHub Releases page](https://github.com/13ray0914/FolioSort/releases) with versioned, immutable download files:
+Each tagged version is published on the [GitHub Releases page](https://github.com/13ray0914/LitNodex/releases) with versioned, immutable download files:
 
-- `FolioSort-vX.Y.Z-source.zip` and `FolioSort-vX.Y.Z-source.tar.gz` — source snapshots
-- `foliosort-X.Y.Z-py3-none-any.whl` and `foliosort-X.Y.Z.tar.gz` — Python package files
-- `FolioSort-X.Y.Z-setup.exe` — Windows/WSL installer
+- `LitNodex-vX.Y.Z-source.zip` and `LitNodex-vX.Y.Z-source.tar.gz` — source snapshots
+- `litnodex-X.Y.Z-py3-none-any.whl` and `litnodex-X.Y.Z.tar.gz` — Python package files
+- `LitNodex-X.Y.Z-setup.exe` — Windows/WSL installer
 - `SHA256SUMS.txt` — checksums for every attached file
 
-The Windows installer sets up the Python package inside an existing Ubuntu/WSL distribution and creates FolioSort shortcuts. Install WSL first with `wsl --install -d Ubuntu` if necessary. The installer preserves the WSL workspace, PDFs, results, and local configuration when FolioSort is upgraded or uninstalled. It does not install Docker/GROBID, Qwen, llama.cpp, GPU drivers, or model weights. The current installer is not code-signed, so Windows SmartScreen may require **More info → Run anyway** after you verify the SHA-256 checksum.
+The Windows installer sets up the Python package inside an existing Ubuntu/WSL distribution and creates LitNodex shortcuts. Install WSL first with `wsl --install -d Ubuntu` if necessary. The installer preserves the WSL workspace, PDFs, results, and local configuration when LitNodex is upgraded or uninstalled. It does not install Docker/GROBID, Qwen, llama.cpp, GPU drivers, or model weights. The current installer is not code-signed, so Windows SmartScreen may require **More info → Run anyway** after you verify the SHA-256 checksum.
 
 ## Install with pip
 
-FolioSort is installable directly from its Git repository. Use a dedicated virtual environment inside WSL/Linux; the Windows-native Python runtime is not supported because the service launchers use POSIX process and locking facilities.
+LitNodex is installable directly from its Git repository. Use a dedicated virtual environment inside WSL/Linux; the Windows-native Python runtime is not supported because the service launchers use POSIX process and locking facilities.
 
 Install the local OCR engine and English/Japanese language data if image-only PDFs must be processed:
 
@@ -118,17 +118,17 @@ The **Run OCR blocked papers** button creates derived searchable PDFs in `data/o
 Before initialization, create a free [OpenAlex account and API key](https://openalex.org/settings/api). OpenAlex's keyless daily budget is intended only for casual use and can stop a multi-paper metadata update with `429 Too Many Requests`; a free key raises the daily budget. See the official [OpenAlex authentication and rate-limit guide](https://help.openalex.org/api/authentication/).
 
 ```bash
-python3 -m venv ~/.venvs/foliosort
-source ~/.venvs/foliosort/bin/activate
+python3 -m venv ~/.venvs/litnodex
+source ~/.venvs/litnodex/bin/activate
 python -m pip install --upgrade pip
-python -m pip install "foliosort @ git+https://github.com/13ray0914/FolioSort.git@main"
+python -m pip install "litnodex @ git+https://github.com/13ray0914/LitNodex.git@main"
 
-foliosort --version
-foliosort init ~/desktop/review
+litnodex --version
+litnodex init ~/desktop/review
 cd ~/desktop/review
 ```
 
-During `foliosort init`, paste the OpenAlex API key at the hidden prompt:
+During `litnodex init`, paste the OpenAlex API key at the hidden prompt:
 
 ```text
 Create a free OpenAlex account and copy your API key:
@@ -136,9 +136,9 @@ Create a free OpenAlex account and copy your API key:
 OpenAlex API key (input hidden; Enter to configure later):
 ```
 
-The key is stored only in the local, Git-ignored `config.json` and is never printed. `foliosort init` writes the application files and creates `config.json` from the example. It does not bundle Qwen, llama.cpp, Docker, or GROBID. To refresh an existing pip-created workspace after upgrading, run `foliosort init ~/desktop/review --force`; generated data, the existing `config.json`, and its API key are preserved.
+The key is stored only in the local, Git-ignored `config.json` and is never printed. `litnodex init` writes the application files and creates `config.json` from the example. It does not bundle Qwen, llama.cpp, Docker, or GROBID. To refresh an existing pip-created workspace after upgrading, run `litnodex init ~/desktop/review --force`; generated data, the existing `config.json`, and its API key are preserved.
 
-For unattended installation, use `foliosort init PATH --no-openalex-prompt` and provide `OPENALEX_API_KEY` in the environment that runs `foliosort serve`.
+For unattended installation, use `litnodex init PATH --no-openalex-prompt` and provide `OPENALEX_API_KEY` in the environment that runs `litnodex serve`.
 
 Install the optional isolated graph environment and start GROBID:
 
@@ -147,14 +147,14 @@ Install the optional isolated graph environment and start GROBID:
 docker compose -f docker-compose.grobid.yml up -d
 ```
 
-After configuring/starting Qwen, verify and serve FolioSort:
+After configuring/starting Qwen, verify and serve LitNodex:
 
 ```bash
-foliosort check
-foliosort serve
+litnodex check
+litnodex serve
 ```
 
-The server stays in the foreground and is available at [http://127.0.0.1:8766](http://127.0.0.1:8766). The `Analyze` button inherits the pip environment used by `foliosort serve`. The core stages can also be run directly with the compatibility command `foliosort pipeline --from-step 6 --to-step 11`.
+The server stays in the foreground and is available at [http://127.0.0.1:8766](http://127.0.0.1:8766). The `Analyze` button inherits the pip environment used by `litnodex serve`. The core stages can also be run directly with the compatibility command `litnodex pipeline --from-step 6 --to-step 11`.
 
 For development from a local checkout, use `python -m pip install -e .` instead of the Git URL.
 
@@ -163,7 +163,7 @@ For development from a local checkout, use `python -m pip install -e .` instead 
 The clone-based setup remains available for development or source inspection. The commands below use the default WSL workspace expected by the launcher scripts.
 
 ```bash
-git clone https://github.com/13ray0914/FolioSort.git ~/desktop/review
+git clone https://github.com/13ray0914/LitNodex.git ~/desktop/review
 cd ~/desktop/review
 
 python3 -m venv .venv
@@ -193,7 +193,7 @@ Start your local llama.cpp server and edit `config.json` if its URL or model nam
 python check_environment.py
 ```
 
-Launch the FolioSort workspace:
+Launch the LitNodex workspace:
 
 ```bash
 ./scripts/start_review_app.sh
@@ -264,7 +264,7 @@ Generated research data, source PDFs, local configuration, caches, and model art
 - Uploaded PDFs and extracted scientific content remain local unless you explicitly configure an external service.
 - Crossref and OpenAlex are used for metadata and citation enrichment, not for downloading paper PDFs.
 
-FolioSort is research software, not an autonomous authority. Validate important claims, numerical values, units, and interpretations against the original papers before publication.
+LitNodex is research software, not an autonomous authority. Validate important claims, numerical values, units, and interpretations against the original papers before publication.
 
 ## Development
 
@@ -288,4 +288,4 @@ CI runs the same security and smoke checks on pushes and pull requests.
 
 ## License
 
-FolioSort is distributed under the [GNU Affero General Public License v3.0 or later](LICENSE) (`AGPL-3.0-or-later`). See the license section in [README_JA.md](README_JA.md#22-ライセンス) for dependency-specific notes.
+LitNodex is distributed under the [GNU Affero General Public License v3.0 or later](LICENSE) (`AGPL-3.0-or-later`). See the license section in [README_JA.md](README_JA.md#22-ライセンス) for dependency-specific notes.

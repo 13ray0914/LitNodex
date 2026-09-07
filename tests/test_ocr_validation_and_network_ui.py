@@ -151,7 +151,7 @@ class NetworkInteractionTests(unittest.TestCase):
         self.assertNotIn("Leiden clustering uses the complete selected layers", graph)
         self.assertNotIn("Drag the vertical ⋮ handle to resize the canvas and controls", graph)
         self.assertIn('id="themeToggle"', curation)
-        self.assertIn("foliosort-curation-theme", curation)
+        self.assertIn("litnodex-curation-theme", curation)
         self.assertIn(':root[data-theme="light"]', curation)
 
 

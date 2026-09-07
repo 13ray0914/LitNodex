@@ -42,7 +42,7 @@ def _template_root() -> Path:
     source_checkout = Path(__file__).resolve().parents[1]
     if (source_checkout / "scripts" / "review_app_server.py").is_file():
         return source_checkout
-    raise RuntimeError("The installed FolioSort workspace template is missing; reinstall FolioSort.")
+    raise RuntimeError("The installed LitNodex workspace template is missing; reinstall LitNodex.")
 
 
 def _workspace(value: str | None) -> Path:
@@ -55,7 +55,7 @@ def _require_workspace(path: Path) -> None:
     missing = [name for name in required if not (path / name).is_file()]
     if missing:
         joined = ", ".join(missing)
-        raise SystemExit(f"Not a FolioSort workspace ({path}); missing: {joined}. Run 'foliosort init PATH'.")
+        raise SystemExit(f"Not a LitNodex workspace ({path}); missing: {joined}. Run 'litnodex init PATH'.")
 
 
 def _runtime_environment(path: Path) -> dict[str, str]:
@@ -118,8 +118,8 @@ def command_init(args: argparse.Namespace) -> int:
         (target / directory).mkdir(exist_ok=True)
     for script in (target / "scripts").glob("*.sh"):
         script.chmod(script.stat().st_mode | stat.S_IXUSR)
-    print(f"FolioSort {__version__} workspace ready: {target}")
-    print(f"Next: cd {target} && foliosort check")
+    print(f"LitNodex {__version__} workspace ready: {target}")
+    print(f"Next: cd {target} && litnodex check")
     return 0
 
 
@@ -146,7 +146,7 @@ def command_serve(args: argparse.Namespace) -> int:
         "--port",
         str(args.port),
     ]
-    print(f"FolioSort {__version__}: http://{args.host}:{args.port}/")
+    print(f"LitNodex {__version__}: http://{args.host}:{args.port}/")
     return subprocess.call(command, cwd=workspace, env=_runtime_environment(workspace))
 
 
@@ -170,12 +170,12 @@ def command_pipeline(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="foliosort", description="FolioSort workspace manager")
-    parser.add_argument("--version", action="version", version=f"FolioSort {__version__}")
+    parser = argparse.ArgumentParser(prog="litnodex", description="LitNodex workspace manager")
+    parser.add_argument("--version", action="version", version=f"LitNodex {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     init_parser = subparsers.add_parser("init", help="create or refresh a runnable workspace")
-    init_parser.add_argument("directory", nargs="?", default="foliosort-workspace")
+    init_parser.add_argument("directory", nargs="?", default="litnodex-workspace")
     init_parser.add_argument("--force", action="store_true", help="refresh bundled application files in a non-empty workspace")
     init_parser.add_argument(
         "--no-openalex-prompt",
@@ -213,7 +213,7 @@ def main() -> int:
     except KeyboardInterrupt:
         return 130
     except (OSError, RuntimeError) as exc:
-        print(f"foliosort: {exc}", file=sys.stderr)
+        print(f"litnodex: {exc}", file=sys.stderr)
         return 1
 
 

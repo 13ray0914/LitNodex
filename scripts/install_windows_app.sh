@@ -8,7 +8,7 @@ command -v powershell.exe >/dev/null 2>&1 || { echo "ERROR: powershell.exe is no
 command -v wslpath >/dev/null 2>&1 || { echo "ERROR: wslpath is unavailable."; exit 2; }
 
 # A VBS launcher keeps the WSL console hidden. The server itself opens the browser only after it is ready.
-VBS="$WIN_DIR/launch_foliosort.vbs"
+VBS="$WIN_DIR/launch_litnodex.vbs"
 ROOT_ESC=${ROOT//\"/\"\"}
 cat > "$VBS" <<EOF
 Set shell = CreateObject("WScript.Shell")
@@ -18,23 +18,23 @@ EOF
 
 WIN_VBS=$(wslpath -w "$VBS")
 WIN_ROOT=$(wslpath -w "$ROOT")
-ICON="$ROOT/assets/foliosort.ico"
-[[ -f "$ICON" ]] || { echo "ERROR: FolioSort icon is missing: $ICON"; exit 2; }
+ICON="$ROOT/assets/litnodex.ico"
+[[ -f "$ICON" ]] || { echo "ERROR: LitNodex icon is missing: $ICON"; exit 2; }
 WIN_ICON=$(wslpath -w "$ICON")
-PS1="$WIN_DIR/create_foliosort_shortcut.ps1"
+PS1="$WIN_DIR/create_litnodex_shortcut.ps1"
 cat > "$PS1" <<'PS'
 param([string]$Launcher,[string]$WorkingDir,[string]$Icon)
 $desktop = [Environment]::GetFolderPath('Desktop')
 $oldShortcutPath = Join-Path $desktop 'Review Literature App.lnk'
 if (Test-Path $oldShortcutPath) { Remove-Item $oldShortcutPath -Force -ErrorAction SilentlyContinue }
-$shortcutPath = Join-Path $desktop 'FolioSort.lnk'
+$shortcutPath = Join-Path $desktop 'LitNodex.lnk'
 $ws = New-Object -ComObject WScript.Shell
 $s = $ws.CreateShortcut($shortcutPath)
 $s.TargetPath = Join-Path $env:SystemRoot 'System32\wscript.exe'
 $s.Arguments = '"' + $Launcher + '"'
 $s.WorkingDirectory = $WorkingDir
 $s.IconLocation = $Icon + ',0'
-$s.Description = 'FolioSort local literature workspace'
+$s.Description = 'LitNodex local literature workspace'
 $s.Save()
 Write-Host "Created: $shortcutPath"
 PS
@@ -43,5 +43,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$WIN_PS1" -Launcher "$W
 
 echo
 echo "Windows launcher installed."
-echo "Double-click 'FolioSort' on the Windows Desktop."
+echo "Double-click 'LitNodex' on the Windows Desktop."
 echo "Ubuntu does not need to be opened manually; WSL starts hidden in the background."

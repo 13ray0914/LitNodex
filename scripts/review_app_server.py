@@ -69,7 +69,7 @@ from lib.projects import (
 from lib.web_security import browser_request_is_trusted, is_loopback_http_url, read_json_object
 from lib.v4_common import ensure_v4_schema, make_visual_chunks, normalize_ws, valid_doi
 
-from foliosort import __version__
+from litnodex import __version__
 
 APP_VERSION = f"{__version__}-ocr-validation-network-ui-v4"
 MAX_UPLOAD_BYTES = 250 * 1024 * 1024
@@ -86,7 +86,7 @@ NETWORK_WEIGHT_DEFAULTS = {
 NETWORK_WEIGHT_KEYS = tuple(NETWORK_WEIGHT_DEFAULTS)
 
 HTML = r'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FolioSort</title><script>try{const saved=localStorage.getItem('foliosort-theme');document.documentElement.dataset.theme=saved||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark')}catch(_error){document.documentElement.dataset.theme='dark'}</script><style>
+<title>LitNodex</title><script>try{const saved=localStorage.getItem('litnodex-theme');document.documentElement.dataset.theme=saved||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark')}catch(_error){document.documentElement.dataset.theme='dark'}</script><style>
 :root{color-scheme:dark;font-family:Inter,Segoe UI,Arial,sans-serif;background:#151515;color:#e8e8eb}*{box-sizing:border-box}body{margin:0;background:#151515}.wrap{max-width:1220px;margin:0 auto;padding:24px}h1{font-size:26px;margin:0 0 5px}h2{font-size:16px;margin:0 0 10px}.muted{color:#a1a1aa;font-size:12px;line-height:1.45}.grid{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:18px;align-items:start}.card{background:#1c1c1f;border:1px solid #33343a;border-radius:12px;padding:16px}.drop{border:2px dashed #555862;border-radius:12px;padding:28px 18px;text-align:center;background:#202024;transition:.15s}.drop.drag{border-color:#b6b7c3;background:#28282e}.drop b{display:block;font-size:18px;margin-bottom:7px}button,.btn,input,select{background:#2a2a30;color:#f4f4f5;border:1px solid #4a4a53;border-radius:8px;padding:10px 13px;font:inherit}button,.btn{cursor:pointer}button:hover,.btn:hover{border-color:#85858f}button:disabled,.btn:disabled{opacity:.42;cursor:not-allowed}.primary{background:#373741;font-weight:700;flex:1}.danger{background:#472525;border-color:#7d3838;font-weight:700;flex:0 0 160px}.projectrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.toolbar button{flex:1;min-width:150px}.pipelineActions{display:flex;gap:8px;margin-top:12px}.statusline{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.pill{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid #444752;color:#d4d4d8}.ok{color:#86efac;border-color:#365c43}.busy{color:#fde68a;border-color:#6b5a2c}.bad{color:#fca5a5;border-color:#713c3c}.files{margin-top:12px;max-height:250px;overflow:auto}.file{padding:8px 0;border-top:1px solid #303036;font-size:13px;word-break:break-all}.log{background:#111113;border:1px solid #303036;border-radius:8px;padding:10px;white-space:pre-wrap;overflow:auto;max-height:650px;min-height:480px;font:12px/1.45 Consolas,monospace}.hint{margin-top:8px;font-size:12px;color:#a1a1aa;line-height:1.45}.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{background:#222226;border-radius:8px;padding:10px}.metric b{font-size:20px;display:block}.hidden{display:none}.projectName{font-size:13px;margin-top:8px}.divider{height:1px;background:#303036;margin:16px 0}.subhead{font-size:14px;font-weight:700;margin:0 0 10px}.results,.libraryCard{margin-top:16px}.libraryControls{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(150px,.7fr);gap:8px}.libraryActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.libraryTarget{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:8px;align-items:center}.libraryList{margin-top:10px;border:1px solid #303036;border-radius:8px;max-height:360px;overflow:auto;background:#18181b}.librow{display:grid;grid-template-columns:28px 58px 72px minmax(0,1fr);gap:8px;align-items:start;padding:9px 10px;border-top:1px solid #29292f;font-size:12px}.librow:first-child{border-top:0}.librow input{width:auto;margin:2px 0}.libtitle{font-weight:600;color:#e4e4e7;line-height:1.35}.libmeta{color:#9ca3af;font-size:11px;line-height:1.35;margin-top:2px}.member{color:#86efac}.notmember{color:#a1a1aa}.libsummary{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px}.libsummary .toolbar{margin:0}.smallbtn{padding:7px 9px;font-size:12px}.selection{color:#c4b5fd}@media(max-width:800px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.counts{grid-template-columns:1fr 1fr}.projectrow{grid-template-columns:1fr 1fr}.projectrow select{grid-column:1/-1}.pipelineActions{flex-direction:column}.danger{flex:auto}.log{min-height:300px;max-height:430px}.libraryControls,.libraryActions,.libraryTarget{grid-template-columns:1fr}.librow{grid-template-columns:28px 58px 1fr}.librow .libyear{display:none}}
 /* Theme and dashboard layout overrides. */
 :root{--page:#151515;--surface:#1c1c1f;--surface2:#222226;--control:#2a2a30;--line:#33343a;--line2:#303036;--text:#e8e8eb;--muted:#a1a1aa;--accent:#c4b5fd;--drop:#202024;--log:#111113;--primary-bg:#4c3c78;--primary-border:#7662ad;--primary-text:#fff;--danger-bg:#692e2e;--danger-border:#a44a4a;--danger-text:#fff;color-scheme:dark;background:var(--page);color:var(--text)}
@@ -99,9 +99,9 @@ html{overflow-y:scroll;scrollbar-gutter:stable}body{background:var(--page);color
 </style></head><body>
 <header class="appHeader">
   <div class="headerInner">
-    <div class="brandLockup" aria-label="FolioSort home">
-      <span class="brandIcon"><svg class="brandMark" viewBox="0 0 64 64" role="img" aria-label="FolioSort"><path d="M18 4h23l10 10v20H18z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M41 4v11h10M25 19h17M25 26h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M6 25h18l6 7h28v27H6z" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M20 47l12-8 12 8M32 39v12" fill="none" stroke="#111827" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="47" r="3.5" fill="#111827"/><circle cx="32" cy="39" r="3.5" fill="#111827"/><circle cx="44" cy="47" r="3.5" fill="#111827"/><circle cx="32" cy="52" r="3.5" fill="#111827"/></svg></span>
-      <span class="brandName">FolioSort</span>
+    <div class="brandLockup" aria-label="LitNodex home">
+      <span class="brandIcon"><svg class="brandMark" viewBox="0 0 64 64" role="img" aria-label="LitNodex"><path d="M18 4h23l10 10v20H18z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M41 4v11h10M25 19h17M25 26h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M6 25h18l6 7h28v27H6z" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M20 47l12-8 12 8M32 39v12" fill="none" stroke="#111827" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="47" r="3.5" fill="#111827"/><circle cx="32" cy="39" r="3.5" fill="#111827"/><circle cx="44" cy="47" r="3.5" fill="#111827"/><circle cx="32" cy="52" r="3.5" fill="#111827"/></svg></span>
+      <span class="brandName">LitNodex</span>
     </div>
     <nav class="appTabs" role="tablist" aria-label="Application sections">
       <button id="projectTab" class="appTab" type="button" role="tab" aria-controls="projectView" aria-selected="true">Home</button>
@@ -127,7 +127,7 @@ html{overflow-y:scroll;scrollbar-gutter:stable}body{background:var(--page);color
     <div id="uploadMsg" class="hint">New PDFs are ingested into the canonical library and assigned to the selected project. Exact byte-identical duplicates reuse the existing paper ID.</div>
     <div id="files" class="files"></div>
     <div class="pipelineActions"><button id="analyze" class="primary">Analyze / Update<br>Selected Project</button><button id="stopPipeline" class="danger" disabled>Stop Process</button></div>
-    <div class="statusline"><span id="pipePill" class="pill">Process: checking</span><span id="estimatePill" class="pill" title="A rough range based on unfinished analysis and this computer's past processing speed.">Time remaining: shown after Analyze</span><span id="svcPill" class="pill">FolioSort: ready</span></div>
+    <div class="statusline"><span id="pipePill" class="pill">Process: checking</span><span id="estimatePill" class="pill" title="A rough range based on unfinished analysis and this computer's past processing speed.">Time remaining: shown after Analyze</span><span id="svcPill" class="pill">LitNodex: ready</span></div>
   </div>
   <div class="card results">
     <h2>Results</h2>
@@ -194,14 +194,14 @@ html{overflow-y:scroll;scrollbar-gutter:stable}body{background:var(--page);color
 <section id="networkView" class="appView networkView" aria-label="Multiplex Network" hidden><iframe id="networkFrame" class="networkFrame" title="Multiplex Network"></iframe></section>
 </main>
 <script>
-const $=x=>document.getElementById(x),drop=$('drop'),pick=$('pick'),bootParams=new URLSearchParams(location.search);let currentProject=bootParams.get('project')||localStorage.getItem('foliosort-project')||localStorage.getItem('review-project')||'default';let refreshing=false;let libraryPapers=[];let selectedLibraryPapers=new Set();let projectRows=[];let referenceIssues=[];let advancedSettingsDirty=false;let networkSettingDefaults=null;
-function syncNetworkTheme(){const frame=$('networkFrame'),theme=document.documentElement.dataset.theme;if(!frame?.contentWindow)return;try{if(typeof frame.contentWindow.applyNetworkTheme==='function')frame.contentWindow.applyNetworkTheme(theme,false)}catch(_error){}frame.contentWindow.postMessage({type:'foliosort-theme',theme},location.origin)}
-function applyTheme(theme,persist=true){const next=theme==='light'?'light':'dark';document.documentElement.dataset.theme=next;$('themeToggle').textContent=next==='dark'?'Light mode':'Dark mode';$('themeToggle').setAttribute('aria-label',`Switch to ${next==='dark'?'light':'dark'} mode`);if(persist)localStorage.setItem('foliosort-theme',next);syncNetworkTheme()}
+const $=x=>document.getElementById(x),drop=$('drop'),pick=$('pick'),bootParams=new URLSearchParams(location.search);let currentProject=bootParams.get('project')||localStorage.getItem('litnodex-project')||localStorage.getItem('review-project')||'default';let refreshing=false;let libraryPapers=[];let selectedLibraryPapers=new Set();let projectRows=[];let referenceIssues=[];let advancedSettingsDirty=false;let networkSettingDefaults=null;
+function syncNetworkTheme(){const frame=$('networkFrame'),theme=document.documentElement.dataset.theme;if(!frame?.contentWindow)return;try{if(typeof frame.contentWindow.applyNetworkTheme==='function')frame.contentWindow.applyNetworkTheme(theme,false)}catch(_error){}frame.contentWindow.postMessage({type:'litnodex-theme',theme},location.origin)}
+function applyTheme(theme,persist=true){const next=theme==='light'?'light':'dark';document.documentElement.dataset.theme=next;$('themeToggle').textContent=next==='dark'?'Light mode':'Dark mode';$('themeToggle').setAttribute('aria-label',`Switch to ${next==='dark'?'light':'dark'} mode`);if(persist)localStorage.setItem('litnodex-theme',next);syncNetworkTheme()}
 $('themeToggle').onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');applyTheme(document.documentElement.dataset.theme,false);
 function networkFrameUrl(){return `/network-content?project=${encodeURIComponent(currentProject)}&theme=${encodeURIComponent(document.documentElement.dataset.theme||'dark')}`}
-function showAppTab(name,persist=true){const next=name==='settings'?'settings':name==='network'?'network':'project';const projectActive=next==='project',settingsActive=next==='settings',networkActive=next==='network';$('projectView').hidden=!projectActive;$('settingsView').hidden=!settingsActive;$('networkView').hidden=!networkActive;$('projectTab').setAttribute('aria-selected',String(projectActive));$('settingsTab').setAttribute('aria-selected',String(settingsActive));$('appMain').classList.toggle('networkMode',networkActive);if(networkActive){const frame=$('networkFrame'),url=networkFrameUrl();if(frame.getAttribute('src')!==url)frame.src=url;else syncNetworkTheme()}if(persist)localStorage.setItem('foliosort-tab',next)}
-$('networkFrame').addEventListener('load',syncNetworkTheme);$('projectTab').onclick=()=>showAppTab('project');$('settingsTab').onclick=()=>showAppTab('settings');showAppTab(bootParams.get('view')==='network'?'network':(localStorage.getItem('foliosort-tab')||'project'),false);
-function saveProject(){localStorage.setItem('foliosort-project',currentProject)}
+function showAppTab(name,persist=true){const next=name==='settings'?'settings':name==='network'?'network':'project';const projectActive=next==='project',settingsActive=next==='settings',networkActive=next==='network';$('projectView').hidden=!projectActive;$('settingsView').hidden=!settingsActive;$('networkView').hidden=!networkActive;$('projectTab').setAttribute('aria-selected',String(projectActive));$('settingsTab').setAttribute('aria-selected',String(settingsActive));$('appMain').classList.toggle('networkMode',networkActive);if(networkActive){const frame=$('networkFrame'),url=networkFrameUrl();if(frame.getAttribute('src')!==url)frame.src=url;else syncNetworkTheme()}if(persist)localStorage.setItem('litnodex-tab',next)}
+$('networkFrame').addEventListener('load',syncNetworkTheme);$('projectTab').onclick=()=>showAppTab('project');$('settingsTab').onclick=()=>showAppTab('settings');showAppTab(bootParams.get('view')==='network'?'network':(localStorage.getItem('litnodex-tab')||'project'),false);
+function saveProject(){localStorage.setItem('litnodex-project',currentProject)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function fmtBytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(1)+' MB'}
 function fmtDuration(seconds){let value=Math.max(0,Math.round(Number(seconds)||0));if(value<90)return `${Math.max(1,Math.round(value/60))} min`;if(value<5400)return `${Math.round(value/60)} min`;if(value<172800){const hours=Math.floor(value/3600),minutes=Math.round((value%3600)/60);return minutes?`${hours} hr ${minutes} min`:`${hours} hr`}const days=Math.floor(value/86400),hours=Math.round((value%86400)/3600);return hours?`${days} d ${hours} hr`:`${days} d`}
 function renderEstimate(status){const pill=$('estimatePill'),estimate=status.process_estimate;if(!status.pipeline_running){pill.textContent='Time remaining: shown after Analyze';pill.className='pill';pill.title="A prediction learned from unfinished chunks and this computer's processing history.";return}if(status.process_kind==='network'){pill.textContent='Multiplex Network rebuild in progress';pill.className='pill busy';pill.title='Only the selected project network is being rebuilt. Full paper analysis is not running.';return}if(status.process_kind==='ocr'){pill.textContent='OCR and affected-paper analysis in progress';pill.className='pill busy';pill.title='Original PDFs are preserved. Only OCR-blocked papers continue through analysis.';return}if(!estimate){pill.textContent='Time remaining: calculating…';pill.className='pill busy';pill.title='Waiting for enough Process log information to calculate an estimate.';return}const point=estimate.estimate_seconds??Math.round((estimate.remaining_low_seconds+estimate.remaining_high_seconds)/2),uncertainty=estimate.uncertainty_seconds??Math.round((estimate.remaining_high_seconds-estimate.remaining_low_seconds)/2);pill.textContent=`Time remaining: about ${fmtDuration(point)} (±${fmtDuration(uncertainty)})`;pill.className='pill busy';const progress=estimate.active_papers?` · Step ${estimate.step}/11: ${estimate.observed_papers}/${estimate.active_papers} papers observed`: ` · Step ${estimate.step}/11`;const samples=estimate.model?.training_samples?` · learned from ${estimate.model.training_samples} completed chunk calls`:'';const blocked=estimate.blocked_papers?` · ${estimate.blocked_papers} OCR-required papers excluded`:'';const warning=estimate.provider_warning?' External service errors are increasing uncertainty.':'';pill.title=`Prediction from past local timings and unfinished work${progress}${samples}${blocked}.${warning}`}
@@ -235,13 +235,13 @@ $('saveNetworkSettings').onclick=async()=>{const weights={};document.querySelect
 $('rebuildNetwork').onclick=async()=>{if(advancedSettingsDirty){alert('Save the network settings before rebuilding.');return}if(!confirm(`Rebuild the Multiplex Network for ${currentProject} using saved analysis? The current network files for this project will be replaced.`))return;$('rebuildNetwork').disabled=true;$('advancedSettingsMsg').textContent='Starting Multiplex Network rebuild…';try{const j=await jsonFetch(purl('/api/rebuild_network'),{method:'POST'});$('advancedSettingsMsg').textContent=j.message;await refresh()}catch(e){$('advancedSettingsMsg').textContent='Could not start Multiplex Network rebuild: '+e}finally{if(!$('rebuildNetwork').dataset.running)$('rebuildNetwork').disabled=false}};
 $('runOcr').onclick=async()=>{if(!confirm(`Run OCR for image-only papers in ${currentProject}? Original PDFs will be preserved. Successfully OCR-processed papers will continue through analysis.`))return;$('runOcr').disabled=true;$('ocrStatus').textContent='Starting OCR…';try{const j=await jsonFetch(purl('/api/run_ocr'),{method:'POST'});$('ocrStatus').textContent=j.message;await refresh()}catch(e){$('ocrStatus').textContent='Could not start OCR: '+e;await refresh()}};
 $('network').onclick=()=>showAppTab('network');$('knowledge').onclick=()=>window.open(purl('/knowledge'),'_blank');$('curation').onclick=async()=>{try{await jsonFetch('/api/start_curation',{method:'POST'});window.open(`http://127.0.0.1:8765/?theme=${encodeURIComponent(document.documentElement.dataset.theme||'dark')}`,'_blank')}catch(e){alert(e)}};
-async function refresh(){if(refreshing)return;refreshing=true;try{const j=await jsonFetch(purl('/api/status'));const sel=$('project');projectRows=j.projects||[];if(!projectRows.some(p=>p.project_slug===currentProject)){currentProject=projectRows[0]?.project_slug||'default';saveProject()}sel.innerHTML=projectRows.map(p=>`<option value="${esc(p.project_slug)}" ${p.project_slug===currentProject?'selected':''}>${esc(p.name)} (${p.active_papers})</option>`).join('');populateTargetProjects();$('active').textContent=j.active_papers;$('memory').textContent=j.memory_count;$('networkState').textContent=j.network_stale?'stale':(j.network_ready?'ready':'not yet');renderClusters(j.network_clusters);renderNetworkSettings(j.network_settings);renderOcrStatus(j.ocr_status,j.pipeline_running);$('projectDisplay').textContent=`${j.project_name} · ${currentProject}`;let runText=j.pipeline_running?(j.process_kind==='network'?'rebuilding network':(j.process_kind==='ocr'?'running OCR':'running')):'idle';if(j.pipeline_running&&j.running_project_name)runText+=` · ${j.running_project_name}`;$('pipePill').textContent='Process: '+runText;$('pipePill').className='pill '+(j.pipeline_running?'busy':'ok');renderEstimate(j);$('analyze').disabled=j.pipeline_running;$('rebuildNetwork').disabled=j.pipeline_running;$('rebuildNetwork').dataset.running=j.pipeline_running?'true':'';$('stopPipeline').disabled=!j.pipeline_stoppable;$('stopPipeline').title=j.pipeline_running&&!j.pipeline_stoppable?'This process was not started by FolioSort, so FolioSort will not stop an unknown process.':'';$('files').innerHTML=(j.raw_pdfs||[]).slice(-30).reverse().map(f=>`<div class="file">${esc(f.name)} <span class="muted">${fmtBytes(f.size)}</span>${f.paper_id?` <span class="muted">(${esc(f.paper_id)})</span>`:''}</div>`).join('')||'<div class="muted">No PDFs in this project yet.</div>';const visibleLog=(j.log_tail||'No process log yet.').replace(/\bPipeline\b/g,'Process').replace(/\bpipeline\b/g,'process');$('log').textContent=visibleLog;const L=$('log');L.scrollTop=L.scrollHeight;$('svcPill').textContent='FolioSort: ready';$('svcPill').className='pill ok'}catch(e){$('svcPill').textContent='FolioSort: disconnected';$('svcPill').className='pill bad'}finally{refreshing=false}}
+async function refresh(){if(refreshing)return;refreshing=true;try{const j=await jsonFetch(purl('/api/status'));const sel=$('project');projectRows=j.projects||[];if(!projectRows.some(p=>p.project_slug===currentProject)){currentProject=projectRows[0]?.project_slug||'default';saveProject()}sel.innerHTML=projectRows.map(p=>`<option value="${esc(p.project_slug)}" ${p.project_slug===currentProject?'selected':''}>${esc(p.name)} (${p.active_papers})</option>`).join('');populateTargetProjects();$('active').textContent=j.active_papers;$('memory').textContent=j.memory_count;$('networkState').textContent=j.network_stale?'stale':(j.network_ready?'ready':'not yet');renderClusters(j.network_clusters);renderNetworkSettings(j.network_settings);renderOcrStatus(j.ocr_status,j.pipeline_running);$('projectDisplay').textContent=`${j.project_name} · ${currentProject}`;let runText=j.pipeline_running?(j.process_kind==='network'?'rebuilding network':(j.process_kind==='ocr'?'running OCR':'running')):'idle';if(j.pipeline_running&&j.running_project_name)runText+=` · ${j.running_project_name}`;$('pipePill').textContent='Process: '+runText;$('pipePill').className='pill '+(j.pipeline_running?'busy':'ok');renderEstimate(j);$('analyze').disabled=j.pipeline_running;$('rebuildNetwork').disabled=j.pipeline_running;$('rebuildNetwork').dataset.running=j.pipeline_running?'true':'';$('stopPipeline').disabled=!j.pipeline_stoppable;$('stopPipeline').title=j.pipeline_running&&!j.pipeline_stoppable?'This process was not started by LitNodex, so LitNodex will not stop an unknown process.':'';$('files').innerHTML=(j.raw_pdfs||[]).slice(-30).reverse().map(f=>`<div class="file">${esc(f.name)} <span class="muted">${fmtBytes(f.size)}</span>${f.paper_id?` <span class="muted">(${esc(f.paper_id)})</span>`:''}</div>`).join('')||'<div class="muted">No PDFs in this project yet.</div>';const visibleLog=(j.log_tail||'No process log yet.').replace(/\bPipeline\b/g,'Process').replace(/\bpipeline\b/g,'process');$('log').textContent=visibleLog;const L=$('log');L.scrollTop=L.scrollHeight;$('svcPill').textContent='LitNodex: ready';$('svcPill').className='pill ok'}catch(e){$('svcPill').textContent='LitNodex: disconnected';$('svcPill').className='pill bad'}finally{refreshing=false}}
 (async()=>{await refresh();await refreshLibrary();await refreshReferenceIssues()})();setInterval(refresh,2500);setInterval(refreshLibrary,15000);setInterval(refreshReferenceIssues,30000);
 </script></body></html>'''.replace("__APP_VERSION__", APP_VERSION.split("-", 1)[0])
 
 
 
-class FolioSortApp:
+class LitNodexApp:
     def __init__(self, config_path: str):
         self.config_path = Path(config_path).resolve()
         self.config, self.root = load_config(config_path)
@@ -297,7 +297,7 @@ class FolioSortApp:
     def pipeline_running(self) -> bool:
         # On Windows/WSL, the same DrvFs file may be reached through both
         # /mnt/c/... and a home-directory symlink. Advisory-lock visibility can
-        # differ across those aliases, so prefer the PID FolioSort recorded for
+        # differ across those aliases, so prefer the PID LitNodex recorded for
         # a process it started, then retain the lock check for external runs.
         if self.owned_pipeline_pid() is not None:
             return True
@@ -813,9 +813,9 @@ class FolioSortApp:
             try:
                 document = json.loads(self.config_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as exc:
-                raise RuntimeError("Could not read the FolioSort configuration") from exc
+                raise RuntimeError("Could not read the LitNodex configuration") from exc
             if not isinstance(document, dict):
-                raise RuntimeError("FolioSort configuration must be a JSON object")
+                raise RuntimeError("LitNodex configuration must be a JSON object")
             multiplex = document.setdefault("multiplex_graph", {})
             if not isinstance(multiplex, dict):
                 raise RuntimeError("multiplex_graph configuration must be an object")
@@ -1441,7 +1441,7 @@ class FolioSortApp:
         pid = self.owned_pipeline_pid()
         if pid is None:
             if self.pipeline_running():
-                return False, "A process is running, but it was not started by FolioSort. It was left untouched for safety."
+                return False, "A process is running, but it was not started by LitNodex. It was left untouched for safety."
             return False, "Process is already idle."
         self.append_log_marker(f"STOP requested from GUI for process group {pid}")
         try:
@@ -1492,11 +1492,11 @@ class FolioSortApp:
         return f"http://127.0.0.1:{port}/"
 
 
-APP: FolioSortApp | None = None
+APP: LitNodexApp | None = None
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = f"FolioSort/{APP_VERSION}"
+    server_version = f"LitNodex/{APP_VERSION}"
 
     def log_message(self, fmt: str, *args: Any) -> None:
         sys.stderr.write("REVIEWAPP %s - %s\n" % (self.address_string(), fmt % args))
@@ -1544,7 +1544,7 @@ class Handler(BaseHTTPRequestHandler):
     def _safe_header_filename(value: str) -> str:
         text = "".join(ch if ch.isascii() and (ch.isalnum() or ch in "._-") else "_" for ch in str(value or ""))
         text = text.strip("._-")
-        return text[:100] or "FolioSort_download"
+        return text[:100] or "LitNodex_download"
 
     def send_download(self, path: Path, filename: str, content_type: str = "application/octet-stream", *, remove_after: bool = False) -> None:
         try:
@@ -1824,8 +1824,8 @@ def main() -> None:
     global APP
     ap=argparse.ArgumentParser(description="Windows-facing local dashboard for the literature review process")
     ap.add_argument("--config", default=str(ROOT / "config.json")); ap.add_argument("--host", default="127.0.0.1"); ap.add_argument("--port", type=int, default=8766)
-    args=ap.parse_args(); APP=FolioSortApp(args.config)
-    print(f"FolioSort: http://{args.host}:{args.port}/")
+    args=ap.parse_args(); APP=LitNodexApp(args.config)
+    print(f"LitNodex: http://{args.host}:{args.port}/")
     print("Select a project, drop PDFs, Analyze, and use Stop Process when needed.")
     ThreadingHTTPServer((args.host,args.port),Handler).serve_forever()
 

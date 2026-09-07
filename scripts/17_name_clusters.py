@@ -418,7 +418,7 @@ def fallback_group_summary(group: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Name FolioSort Literature Network clusters with hierarchical, reproducible local-Qwen analysis.")
+    ap = argparse.ArgumentParser(description="Name LitNodex Literature Network clusters with hierarchical, reproducible local-Qwen analysis.")
     ap.add_argument("--config", default=str(ROOT / "config.json"))
     ap.add_argument("--project", required=True)
     ap.add_argument("--force", action="store_true", help="Bypass canonical content-addressed caches without overwriting them")

@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 from lib.projects import project_network_dir
-from scripts.review_app_server import FolioSortApp, NETWORK_WEIGHT_DEFAULTS
+from scripts.review_app_server import LitNodexApp, NETWORK_WEIGHT_DEFAULTS
 
 
 class NetworkDashboardTests(unittest.TestCase):
@@ -19,7 +19,7 @@ class NetworkDashboardTests(unittest.TestCase):
                 "multiplex_graph": {"clustering": {"resolution": 1.0, "seed": 42}},
             }
             config_path.write_text(json.dumps(document), encoding="utf-8")
-            app = object.__new__(FolioSortApp)
+            app = object.__new__(LitNodexApp)
             app.config_path = config_path
             app.config = document
             app.network_settings_lock = threading.Lock()
@@ -34,7 +34,7 @@ class NetworkDashboardTests(unittest.TestCase):
             self.assertEqual(saved["resolution"], 1.25)
 
     def test_network_settings_reject_disabling_every_layer(self) -> None:
-        app = object.__new__(FolioSortApp)
+        app = object.__new__(LitNodexApp)
         app.network_settings_lock = threading.Lock()
         with self.assertRaisesRegex(ValueError, "At least one"):
             app.save_network_settings(
@@ -58,7 +58,7 @@ class NetworkDashboardTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            app = object.__new__(FolioSortApp)
+            app = object.__new__(LitNodexApp)
             app.root = root
             app.network_summary_cache = {}
 

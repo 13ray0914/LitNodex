@@ -175,7 +175,7 @@ def main() -> None:
                     qpdf = shutil.which("qpdf")
                     if qpdf:
                         descriptor, decrypted_name = tempfile.mkstemp(
-                            prefix=f"foliosort-{paper_id}-", suffix=".pdf"
+                            prefix=f"litnodex-{paper_id}-", suffix=".pdf"
                         )
                         os.close(descriptor)
                         decrypted = Path(decrypted_name)

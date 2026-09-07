@@ -15,7 +15,7 @@ if [[ "${REVIEW_PIPELINE_LOCKED:-0}" != "1" ]]; then
   fi
   rc=$?
   if [[ "$rc" -eq 200 ]]; then
-    echo "[$(date '+%F %T')] Another FolioSort process is already running."
+    echo "[$(date '+%F %T')] Another LitNodex process is already running."
   fi
   exit "$rc"
 fi

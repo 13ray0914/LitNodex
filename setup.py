@@ -1,4 +1,4 @@
-"""Build hook that embeds a clean FolioSort workspace in the wheel."""
+"""Build hook that embeds a clean LitNodex workspace in the wheel."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ WORKSPACE_FILES = (
 class build_py(_build_py):
     def run(self) -> None:
         super().run()
-        target = Path(self.build_lib) / "foliosort" / "_workspace"
+        target = Path(self.build_lib) / "litnodex" / "_workspace"
         if target.exists():
             shutil.rmtree(target)
         target.mkdir(parents=True)

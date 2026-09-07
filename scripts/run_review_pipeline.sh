@@ -35,7 +35,7 @@ fi
 exec > >(tee -a "$LOG") 2>&1
 
 echo
-_FS_VERSION="$(python3 -c 'from foliosort import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
+_FS_VERSION="$(python3 -c 'from litnodex import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
 echo "========== Review process v${_FS_VERSION} $(date '+%F %T') =========="
 echo "Project scope: ${REVIEW_PROJECT:-all papers}"
 cd "$ROOT"

@@ -21,22 +21,22 @@ PDF追加
 
 ## pipでインストールする
 
-FolioSortはWSL2/UbuntuまたはLinuxのPython 3.10以上へ、GitHubから直接pip installできます。POSIXのプロセス制御とファイルロックを使用するため、WindowsネイティブPythonではなくWSL/Linux内で実行してください。
+LitNodexはWSL2/UbuntuまたはLinuxのPython 3.10以上へ、GitHubから直接pip installできます。POSIXのプロセス制御とファイルロックを使用するため、WindowsネイティブPythonではなくWSL/Linux内で実行してください。
 
 最初に[OpenAlexの設定ページ](https://openalex.org/settings/api)で無料アカウントを作成し、API keyを取得してください。keyなしで利用できる1日あたりの上限は少なく、多数の論文を処理すると`429 Too Many Requests`でmetadata取得が止まることがあります。無料API keyを使うと1日の利用枠が増えます。詳細は[OpenAlex公式の認証・rate limitガイド](https://help.openalex.org/api/authentication/)を参照してください。
 
 ```bash
-python3 -m venv ~/.venvs/foliosort
-source ~/.venvs/foliosort/bin/activate
+python3 -m venv ~/.venvs/litnodex
+source ~/.venvs/litnodex/bin/activate
 python -m pip install --upgrade pip
-python -m pip install "foliosort @ git+https://github.com/13ray0914/FolioSort.git@main"
+python -m pip install "litnodex @ git+https://github.com/13ray0914/LitNodex.git@main"
 
-foliosort --version
-foliosort init ~/desktop/review
+litnodex --version
+litnodex init ~/desktop/review
 cd ~/desktop/review
 ```
 
-`foliosort init`の途中で、取得したOpenAlex API keyを入力します。入力内容は画面に表示されません。
+`litnodex init`の途中で、取得したOpenAlex API keyを入力します。入力内容は画面に表示されません。
 
 ```text
 Create a free OpenAlex account and copy your API key:
@@ -44,28 +44,28 @@ Create a free OpenAlex account and copy your API key:
 OpenAlex API key (input hidden; Enter to configure later):
 ```
 
-API keyはGitの管理対象外であるlocalの`config.json`だけに保存され、logや画面には出力されません。`foliosort init`は実行用workspaceを作り、`config.example.json`から`config.json`を生成します。既存workspaceのapplication部分だけを更新する場合は、upgrade後に次を実行します。研究data、生成物、既存の`config.json`、保存済みAPI keyは保持されます。
+API keyはGitの管理対象外であるlocalの`config.json`だけに保存され、logや画面には出力されません。`litnodex init`は実行用workspaceを作り、`config.example.json`から`config.json`を生成します。既存workspaceのapplication部分だけを更新する場合は、upgrade後に次を実行します。研究data、生成物、既存の`config.json`、保存済みAPI keyは保持されます。
 
 ```bash
-foliosort init ~/desktop/review --force
+litnodex init ~/desktop/review --force
 ```
 
-自動構築など対話入力できない環境では、`foliosort init PATH --no-openalex-prompt`を使用し、`foliosort serve`を実行する環境に`OPENALEX_API_KEY`を設定してください。
+自動構築など対話入力できない環境では、`litnodex init PATH --no-openalex-prompt`を使用し、`litnodex serve`を実行する環境に`OPENALEX_API_KEY`を設定してください。
 
 graph用の分離環境とGROBIDを準備し、Qwenを起動・設定した後に確認して起動します。
 
 ```bash
 ./scripts/install_network_env.sh
 docker compose -f docker-compose.grobid.yml up -d
-foliosort check
-foliosort serve
+litnodex check
+litnodex serve
 ```
 
-browserで `http://127.0.0.1:8766` を開きます。core processだけを直接実行する場合は、互換コマンド `foliosort pipeline --from-step 6 --to-step 11` を使用できます。開発用のlocal checkoutでは `python -m pip install -e .` も利用できます。
+browserで `http://127.0.0.1:8766` を開きます。core processだけを直接実行する場合は、互換コマンド `litnodex pipeline --from-step 6 --to-step 11` を使用できます。開発用のlocal checkoutでは `python -m pip install -e .` も利用できます。
 
 ### ローカルQwen実行環境
 
-現在の自動起動設定は、Qwen3.8-27B Q4_K_M（約17GB）とQ4_0 MTP draft（約1.6GB）、GPU全層offload、Flash Attention、1 slot、65,536 token contextを使用します。[Qwen公式model card](https://huggingface.co/Qwen/Qwen3.8-27B)では27B dense model、native context 262,144 tokenとされていますが、FolioSortはmemoryを抑えるため65,536 tokenに設定しています。
+現在の自動起動設定は、Qwen3.8-27B Q4_K_M（約17GB）とQ4_0 MTP draft（約1.6GB）、GPU全層offload、Flash Attention、1 slot、65,536 token contextを使用します。[Qwen公式model card](https://huggingface.co/Qwen/Qwen3.8-27B)では27B dense model、native context 262,144 tokenとされていますが、LitNodexはmemoryを抑えるため65,536 tokenに設定しています。
 
 | 項目 | 現在の既定構成の実用上の最低 | 推奨 | 補足 |
 |---|---:|---:|---|
@@ -85,7 +85,7 @@ export QWEN_MODEL="$HOME/models/Qwen3.8-27B/Qwen3.8-27B-Q4_K_M.gguf"
 export QWEN_DRAFT_MODEL="$HOME/models/Qwen3.8-27B/mtp-Qwen3.8-27B-Q4_0.gguf"
 ```
 
-Qwenのweight、GGUF、llama.cpp、Docker自体はFolioSortのpip packageには含まれません。
+Qwenのweight、GGUF、llama.cpp、Docker自体はLitNodexのpip packageには含まれません。
 
 ---
 
@@ -93,7 +93,7 @@ Qwenのweight、GGUF、llama.cpp、Docker自体はFolioSortのpip packageには�
 
 大量論文のレビューで最も危険なのは、「LLMが読みやすい要約を作ったが、その一文が元論文のどこに書いてあったか追えない」状態です。
 
-FolioSortでは、本文中の各文に `s000001` のようなIDを付け、Qwenが抽出するmeasurementやclaimに必ず `evidence_sids` を付けます。
+LitNodexでは、本文中の各文に `s000001` のようなIDを付け、Qwenが抽出するmeasurementやclaimに必ず `evidence_sids` を付けます。
 
 例:
 
@@ -123,7 +123,7 @@ FolioSortでは、本文中の各文に `s000001` のようなIDを付け、Qwen
 プロジェクトディレクトリへ移動します。
 
 ```bash
-cd foliosort-workspace
+cd litnodex-workspace
 ```
 
 Python仮想環境を作ります。
@@ -171,7 +171,7 @@ docker compose -f docker-compose.grobid.yml down
 
 # 3. Qwenをllama.cpp serverとして起動する
 
-FolioSortはOpenAI互換の `/v1/chat/completions` を使います。
+LitNodexはOpenAI互換の `/v1/chat/completions` を使います。
 
 すでにQwen GGUFを動かしている場合、推論条件はなるべくそのまま使い、CLIではなく `llama-server` で起動してください。
 
@@ -664,7 +664,7 @@ python run_pipeline.py
 その後はOSのschedulerから:
 
 ```bash
-cd /path/to/foliosort-workspace
+cd /path/to/litnodex-workspace
 source .venv/bin/activate
 python run_pipeline.py >> logs/nightly.log 2>&1
 ```
@@ -737,7 +737,7 @@ citation_contexts
 ## 一度だけ
 
 ```bash
-cd foliosort-workspace
+cd litnodex-workspace
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -784,7 +784,7 @@ python run_pipeline.py
 
 # 18. ライセンス
 
-FolioSortは [GNU Affero General Public License v3.0 以降](LICENSE) (AGPL-3.0-or-later) で配布されます。
+LitNodexは [GNU Affero General Public License v3.0 以降](LICENSE) (AGPL-3.0-or-later) で配布されます。
 
 主な理由は、依存パッケージの一部がコピーレフトライセンスであることです。
 

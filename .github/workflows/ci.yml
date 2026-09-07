@@ -42,18 +42,18 @@ jobs:
       - name: Build and smoke-test the wheel
         run: |
           python -m build
-          python -m venv /tmp/foliosort-wheel-test
-          /tmp/foliosort-wheel-test/bin/python -m pip install --no-deps dist/*.whl
-          /tmp/foliosort-wheel-test/bin/foliosort --version
-          /tmp/foliosort-wheel-test/bin/foliosort init /tmp/foliosort-workspace
-          test -f /tmp/foliosort-workspace/scripts/review_app_server.py
-          test -f /tmp/foliosort-workspace/config.json
+          python -m venv /tmp/litnodex-wheel-test
+          /tmp/litnodex-wheel-test/bin/python -m pip install --no-deps dist/*.whl
+          /tmp/litnodex-wheel-test/bin/litnodex --version
+          /tmp/litnodex-wheel-test/bin/litnodex init /tmp/litnodex-workspace
+          test -f /tmp/litnodex-workspace/scripts/review_app_server.py
+          test -f /tmp/litnodex-workspace/config.json
 
       - name: Run regression tests
         run: python -m unittest discover -s tests -v
 
       - name: Compile Python sources
-        run: python -m compileall -q foliosort lib scripts run_pipeline.py check_environment.py
+        run: python -m compileall -q litnodex lib scripts run_pipeline.py check_environment.py
 
       - name: Validate shell scripts
         run: bash -n scripts/*.sh
@@ -92,7 +92,7 @@ jobs:
       - name: Verify version and build wheel
         shell: pwsh
         run: |
-          $packageVersion = python -c "from foliosort import __version__; print(__version__)"
+          $packageVersion = python -c "from litnodex import __version__; print(__version__)"
           $tagVersion = $env:GITHUB_REF_NAME.Substring(1)
           if ($packageVersion -ne $tagVersion) {
             throw "Package version '$packageVersion' does not match tag '$env:GITHUB_REF_NAME'."
@@ -100,7 +100,7 @@ jobs:
           python -m pip install --upgrade pip build
           python -m build --wheel
           New-Item -ItemType Directory -Force windows/installer/payload | Out-Null
-          Copy-Item dist/foliosort-*.whl windows/installer/payload/
+          Copy-Item dist/litnodex-*.whl windows/installer/payload/
 
       - name: Install pinned Inno Setup compiler
         shell: pwsh
@@ -109,18 +109,18 @@ jobs:
       - name: Compile Windows installer
         shell: pwsh
         run: |
-          $packageVersion = python -c "from foliosort import __version__; print(__version__)"
+          $packageVersion = python -c "from litnodex import __version__; print(__version__)"
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path -LiteralPath $iscc)) { throw "Inno Setup compiler not found: $iscc" }
-          & $iscc "/DMyVersion=$packageVersion" "windows\installer\FolioSort.iss"
+          & $iscc "/DMyVersion=$packageVersion" "windows\installer\LitNodex.iss"
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE" }
-          Get-FileHash dist-installer\FolioSort-*-setup.exe -Algorithm SHA256
+          Get-FileHash dist-installer\LitNodex-*-setup.exe -Algorithm SHA256
 
       - name: Upload setup.exe for the release job
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: foliosort-windows-installer
-          path: dist-installer/FolioSort-*-setup.exe
+          name: litnodex-windows-installer
+          path: dist-installer/LitNodex-*-setup.exe
           if-no-files-found: error
           retention-days: 7
 
@@ -164,12 +164,12 @@ jobs:
 
       - name: Verify __version__ matches tag
         run: |
-          PKG_VERSION="$(python -c 'from foliosort import __version__; print(__version__)')"
+          PKG_VERSION="$(python -c 'from litnodex import __version__; print(__version__)')"
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           if [[ "$PKG_VERSION" != "$TAG_VERSION" ]]; then
-            echo "ERROR: foliosort/__init__.py __version__ = '$PKG_VERSION'"
+            echo "ERROR: litnodex/__init__.py __version__ = '$PKG_VERSION'"
             echo "       tag is '$GITHUB_REF_NAME' (expects '$TAG_VERSION')"
-            echo "Bump __version__ in foliosort/__init__.py and retag."
+            echo "Bump __version__ in litnodex/__init__.py and retag."
             exit 1
           fi
           echo "Version check passed: $PKG_VERSION == $TAG_VERSION"
@@ -180,14 +180,14 @@ jobs:
       - name: Build stable source archives
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          PREFIX="FolioSort-v${TAG_VERSION}/"
-          git archive --format=zip --prefix="$PREFIX" -o "dist/FolioSort-v${TAG_VERSION}-source.zip" "$GITHUB_SHA"
-          git archive --format=tar.gz --prefix="$PREFIX" -o "dist/FolioSort-v${TAG_VERSION}-source.tar.gz" "$GITHUB_SHA"
+          PREFIX="LitNodex-v${TAG_VERSION}/"
+          git archive --format=zip --prefix="$PREFIX" -o "dist/LitNodex-v${TAG_VERSION}-source.zip" "$GITHUB_SHA"
+          git archive --format=tar.gz --prefix="$PREFIX" -o "dist/LitNodex-v${TAG_VERSION}-source.tar.gz" "$GITHUB_SHA"
 
       - name: Download Windows installer
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: foliosort-windows-installer
+          name: litnodex-windows-installer
           path: dist
 
       - name: Write SHA-256 checksums
@@ -200,6 +200,6 @@ jobs:
         uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           tag_name: ${{ github.ref_name }}
-          name: "FolioSort ${{ github.ref_name }}"
+          name: "LitNodex ${{ github.ref_name }}"
           generate_release_notes: true
           files: dist/*

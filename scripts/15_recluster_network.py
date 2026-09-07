@@ -29,7 +29,7 @@ from lib.network_runtime import (
 )
 from lib.pipeline_common import load_config, read_json, stable_json_hash, write_json
 from lib.projects import normalize_project_slug, project_network_dir
-from foliosort import __version__
+from litnodex import __version__
 
 SCRIPT_VERSION = f"network-recluster-v{__version__}-security-hardened-workspace"
 
@@ -53,7 +53,7 @@ def layer_maps(payload: dict[str, Any], selected: set[str]) -> dict[str, dict[tu
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Recluster an existing FolioSort project network using selected layers.")
+    ap = argparse.ArgumentParser(description="Recluster an existing LitNodex project network using selected layers.")
     ap.add_argument("--config", default=str(ROOT / "config.json"))
     ap.add_argument("--project", required=True)
     ap.add_argument("--layers", required=True, help="Comma-separated layer names")

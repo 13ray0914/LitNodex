@@ -4,16 +4,16 @@ ROOT="${REVIEW_ROOT:-$HOME/desktop/review}"
 PORT="${REVIEW_APP_PORT:-8766}"
 URL="http://127.0.0.1:${PORT}/"
 PYTHON_BIN="${REVIEW_PYTHON:-$ROOT/.venv/bin/python}"
-_BASE_VERSION="$("$PYTHON_BIN" -c 'from foliosort import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
+_BASE_VERSION="$("$PYTHON_BIN" -c 'from litnodex import __version__; print(__version__)' 2>/dev/null || echo "unknown")"
 EXPECTED_VERSION="${_BASE_VERSION}-ocr-validation-network-ui-v4"
 mkdir -p "$ROOT/logs"
 
 health="$(curl -fsS "${URL}health" 2>/dev/null || true)"
 if [[ -n "$health" ]] && printf '%s' "$health" | grep -Eq '"version"[[:space:]]*:[[:space:]]*"'"$EXPECTED_VERSION"'"'; then
-  echo "FolioSort already running: $URL ($EXPECTED_VERSION)"
+  echo "LitNodex already running: $URL ($EXPECTED_VERSION)"
 else
   if [[ -n "$health" ]]; then
-    echo "Older FolioSort detected; restarting it for $EXPECTED_VERSION..."
+    echo "Older LitNodex detected; restarting it for $EXPECTED_VERSION..."
     "$ROOT/scripts/stop_review_app.sh" >/dev/null 2>&1 || true
     sleep 0.5
   fi
@@ -29,11 +29,11 @@ else
   done
   health="$(curl -fsS "${URL}health" 2>/dev/null || true)"
   if [[ -z "$health" ]] || ! printf '%s' "$health" | grep -Eq '"version"[[:space:]]*:[[:space:]]*"'"$EXPECTED_VERSION"'"'; then
-    echo "ERROR: FolioSort did not start with expected version $EXPECTED_VERSION."
+    echo "ERROR: LitNodex did not start with expected version $EXPECTED_VERSION."
     tail -n 80 "$ROOT/logs/review-app.log" 2>/dev/null || true
     exit 1
   fi
-  echo "FolioSort started: $URL ($EXPECTED_VERSION)"
+  echo "LitNodex started: $URL ($EXPECTED_VERSION)"
 fi
 
 if command -v powershell.exe >/dev/null 2>&1; then

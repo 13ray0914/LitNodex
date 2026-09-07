@@ -7,8 +7,8 @@ from argparse import Namespace
 from pathlib import Path
 from unittest.mock import patch
 
-from foliosort import __version__
-from foliosort.cli import build_parser, command_init
+from litnodex import __version__
+from litnodex.cli import build_parser, command_init
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,10 +17,10 @@ ROOT = Path(__file__).resolve().parents[1]
 class PackagingTests(unittest.TestCase):
     def test_version_is_single_sourced_for_package_metadata(self) -> None:
         pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        # Version is the single source of truth in foliosort/__init__.py.
+        # Version is the single source of truth in litnodex/__init__.py.
         # pyproject.toml must use dynamic version, not a hardcoded duplicate.
         self.assertIn('dynamic = ["version"]', pyproject)
-        self.assertIn('version = {attr = "foliosort.__version__"}', pyproject)
+        self.assertIn('version = {attr = "litnodex.__version__"}', pyproject)
         self.assertNotIn(f'version = "{__version__}"', pyproject)
 
     def test_pipeline_cli_accepts_core_stage_options(self) -> None:
@@ -58,8 +58,8 @@ class PackagingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             workspace = Path(temporary) / "review"
             args = Namespace(directory=str(workspace), force=False, no_openalex_prompt=False)
-            with patch("foliosort.cli.sys.stdin.isatty", return_value=True), patch(
-                "foliosort.cli.getpass.getpass", return_value="test-openalex-key"
+            with patch("litnodex.cli.sys.stdin.isatty", return_value=True), patch(
+                "litnodex.cli.getpass.getpass", return_value="test-openalex-key"
             ):
                 self.assertEqual(command_init(args), 0)
             config = json.loads((workspace / "config.json").read_text(encoding="utf-8"))
