@@ -211,7 +211,7 @@ On Windows, a desktop shortcut can be created once with:
 
 Place PDFs in the configured raw-PDF directory or add them through the dashboard. For a full project update, use the dashboard's **Analyze / Update Selected Project** button
 
-<img width="1919" height="1059" alt="Image" src="https://github.com/user-attachments/assets/bfbfe460-95ef-42a7-977f-0c3f8b820f21" />
+<img width="1919" height="1063" alt="Image" src="https://github.com/user-attachments/assets/551e3632-60cc-4b6c-b98b-02439b320a18" />
 
 or run:
 
