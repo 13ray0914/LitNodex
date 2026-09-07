@@ -2,59 +2,33 @@
 
 [![CI](https://github.com/13ray0914/LitNodex/actions/workflows/ci.yml/badge.svg)](https://github.com/13ray0914/LitNodex/actions/workflows/ci.yml)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL--3.0--or--later-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-4.4.2-8b5cf6.svg)](https://github.com/13ray0914/LitNodex/releases)
+[![Version](https://img.shields.io/github/v/release/13ray0914/LitNodex?color=8b5cf6)](https://github.com/13ray0914/LitNodex/releases)
 
-LitNodex is a local-first, evidence-traceable literature review workspace. It turns a collection of scientific PDFs into structured claims, measurements, review reports, literature networks, and a scientific knowledge graph while preserving links back to the source sentences and visual evidence.
+**LitNodex turns your scientific PDF library into a local, reviewable evidence base.** It extracts claims and measurements, links them to source sentences and visual evidence, and maps relationships across papers. Its focus is the combination of **source-level traceability, human curation, and configurable literature networks** in a reusable workspace.
 
-> [日本語README](README_JA.md) · [v4の詳細な日本語ガイド](README_V4_JA.md)
+| Tool | Main workflow | Main result |
+|---|---|---|
+| [ChatGPT Deep Research](https://help.openai.com/en/articles/10500283-deep-research-daq) | Investigate a question across the web, uploaded files, and connected sources | A synthesized report with citations or source links |
+| [Connected Papers](https://www.connectedpapers.com/main/) | Explore similar papers around a starting paper and discover prior or derivative works | A visual map for literature discovery |
+| **LitNodex** | Analyze and curate a chosen PDF collection using local models | Structured evidence, review records, and networks built from citations, semantics, claims, properties, and methods |
 
-<img width="1919" height="1063" alt="Image" src="https://github.com/user-attachments/assets/b617d53b-875e-4842-9350-18879b1823e9" />
+Use LitNodex when you need to inspect *which passage supports a claim*, correct extracted data, and regroup papers as your review develops. These tools can complement one another: discover literature, obtain the PDFs, then build and maintain the evidence base locally.
 
-## Why LitNodex?
+> [日本語README](README_JA.md) · [Detailed Japanese guide](README_V4_JA.md)
 
-LLM-generated summaries are difficult to audit when their statements cannot be traced to the original paper. LitNodex assigns stable IDs to papers, sentences, figures, tables, equations, claims, and measurements so that a review statement can be traced in reverse:
+<img width="1919" height="1063" alt="LitNodex literature network and review workspace" src="https://github.com/user-attachments/assets/b617d53b-875e-4842-9350-18879b1823e9" />
 
-```text
-review statement
-  → claim or measurement
-  → evidence sentence / figure / table
-  → original PDF
-```
+## What you can do
 
-PDF filenames are never treated as scientific evidence. They are retained only as human-readable references to the original files.
-
-## Features
-
-- Local PDF ingestion with SHA-256 change and duplicate detection
-- Stable paper and evidence identifiers
-- GROBID full-text, bibliography, and coordinate extraction
-- Local Qwen/llama.cpp inventory, measurement, and atomic-claim extraction
-- Whole-paper summary memory for long-document processing
-- Mechanical validation independent of the LLM
-- Human review, approval, rejection, and curation workflows
-- Crossref and OpenAlex metadata enrichment and reference resolution
-- Figure, table, graph, scheme, and equation extraction
-- Optional SPECTER2 embeddings
-- Multiplex literature network with Leiden clustering
-- Scientific knowledge graph with progressive neighborhood expansion
-- Project workspaces over a shared canonical PDF library
-- Resumable, hash-aware processing that skips unchanged stages
-
-## Process
+- **Trace evidence:** stable IDs connect claims and measurements to sentences, figures, tables, equations, and the original PDF.
+- **Review extractions:** inspect mechanical validation results, correct records, and record human approval or rejection.
+- **Explore relationships:** combine seven network layers with Leiden clustering, or navigate the scientific knowledge graph.
+- **Maintain a growing library:** projects share a canonical PDF library; hash-based processing detects duplicates and reuses unchanged stages.
+- **Enrich and export:** resolve metadata and references through Crossref/OpenAlex, then export evidence reports and graph data.
 
 ```text
-PDFs
-  → manifest and stable paper IDs
-  → GROBID TEI
-  → sentence/visual JSON
-  → metadata enrichment
-  → visual asset extraction
-  → whole-paper summary memory
-  → inventory and evidence extraction
-  → deterministic validation
-  → reference resolution
-  → human review reports
-  → embeddings, networks, and knowledge graph
+PDFs → text and visual extraction → claims and measurements
+     → validation and human review → reports and graphs
 ```
 
 ## Requirements
@@ -67,9 +41,10 @@ PDFs
 
 Optional components include SPECTER2, MinerU, and a separate multimodal llama.cpp server for visual interpretation.
 
-### Local Qwen hardware requirements
+<details>
+<summary>Local Qwen hardware requirements and model paths</summary>
 
-The automatic launcher is tuned for **Qwen3.8-27B Q4_K_M** with the Q4_0 MTP draft model, full GPU offload, one request slot, Flash Attention, and a 65,536-token context. The two GGUF files used by the current default are approximately 17 GB and 1.6 GB. Qwen's official model card describes the model as a 27B dense model with a native 262,144-token context; LitNodex deliberately uses a smaller context to control memory use. See the [official Qwen3.8-27B model card](https://huggingface.co/Qwen/Qwen3.8-27B) and [llama.cpp server options](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
+The default launcher uses **Qwen3.8-27B Q4_K_M**, a Q4_0 MTP draft model, full GPU offload, and a 65,536-token context. The model files total about 19 GB. See the [Qwen model card](https://huggingface.co/Qwen/Qwen3.8-27B) and [llama.cpp server options](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md).
 
 | Resource | Practical minimum for the default | Recommended | Notes |
 |---|---:|---:|---|
@@ -79,7 +54,7 @@ The automatic launcher is tuned for **Qwen3.8-27B Q4_K_M** with the Q4_0 MTP dra
 | Free disk | 25 GB for llama.cpp and the two GGUF files | 40 GB or more plus PDF/output space | LitNodex research data, GROBID images, embeddings, and backups need additional space. |
 | CPU | Modern x86-64 CPU with AVX2, 8 cores | 12+ cores | CPU is used for parsing, validation, graph construction, and any layers not offloaded to the GPU. |
 
-These figures are deployment guidance, not a guarantee: model quantization, context length, llama.cpp revision, KV-cache type, batch size, and GPU display usage all change memory consumption. The default `-c 65536` reserves substantially more cache than a shorter context. If 24 GB VRAM is insufficient, first stop other GPU applications, then try `-c 32768`; reducing it further can reject LitNodex's longer requests. Changing the launcher command requires editing `scripts/run_review_pipeline.sh`.
+Memory use varies with model, context, cache settings, and llama.cpp build. If 24 GB VRAM is insufficient, close other GPU applications or try `-c 32768` in `scripts/run_review_pipeline.sh`; shorter contexts may reject long extraction requests.
 
 The launcher reads these environment variables, so custom locations do not require editing source files:
 
@@ -91,9 +66,11 @@ export QWEN_DRAFT_MODEL="$HOME/models/Qwen3.8-27B/mtp-Qwen3.8-27B-Q4_0.gguf"
 
 The Qwen weights and llama.cpp binary are not installed by the LitNodex Python package.
 
+</details>
+
 ## Download a release
 
-Each tagged version is published on the [GitHub Releases page](https://github.com/13ray0914/LitNodex/releases) with versioned, immutable download files:
+Download a version from [GitHub Releases](https://github.com/13ray0914/LitNodex/releases):
 
 - `LitNodex-vX.Y.Z-source.zip` and `LitNodex-vX.Y.Z-source.tar.gz` — source snapshots
 - `litnodex-X.Y.Z-py3-none-any.whl` and `litnodex-X.Y.Z.tar.gz` — Python package files
@@ -115,7 +92,7 @@ sudo apt install ocrmypdf tesseract-ocr-eng tesseract-ocr-jpn
 
 The **Run OCR blocked papers** button creates derived searchable PDFs in `data/ocr_pdfs/`; canonical source PDFs are never overwritten. Only successfully OCR-processed papers are sent through the remaining resumable stages.
 
-Before initialization, create a free [OpenAlex account and API key](https://openalex.org/settings/api). OpenAlex's keyless daily budget is intended only for casual use and can stop a multi-paper metadata update with `429 Too Many Requests`; a free key raises the daily budget. See the official [OpenAlex authentication and rate-limit guide](https://help.openalex.org/api/authentication/).
+Create an [OpenAlex API key](https://openalex.org/settings/api) for metadata enrichment. See the [authentication and rate-limit guide](https://help.openalex.org/api/authentication/) if requests return `429 Too Many Requests`.
 
 ```bash
 python3 -m venv ~/.venvs/litnodex
@@ -128,15 +105,7 @@ litnodex init ~/desktop/review
 cd ~/desktop/review
 ```
 
-During `litnodex init`, paste the OpenAlex API key at the hidden prompt:
-
-```text
-Create a free OpenAlex account and copy your API key:
-  https://openalex.org/settings/api
-OpenAlex API key (input hidden; Enter to configure later):
-```
-
-The key is stored only in the local, Git-ignored `config.json` and is never printed. `litnodex init` writes the application files and creates `config.json` from the example. It does not bundle Qwen, llama.cpp, Docker, or GROBID. To refresh an existing pip-created workspace after upgrading, run `litnodex init ~/desktop/review --force`; generated data, the existing `config.json`, and its API key are preserved.
+`litnodex init` creates the workspace and prompts for your OpenAlex API key. The key stays in the local, Git-ignored `config.json` and is never printed. After upgrading the package, run `litnodex init ~/desktop/review --force` to refresh application files while preserving research data and existing configuration.
 
 For unattended installation, use `litnodex init PATH --no-openalex-prompt` and provide `OPENALEX_API_KEY` in the environment that runs `litnodex serve`.
 
@@ -156,64 +125,26 @@ litnodex serve
 
 The server stays in the foreground and is available at [http://127.0.0.1:8766](http://127.0.0.1:8766). The `Analyze` button inherits the pip environment used by `litnodex serve`. The core stages can also be run directly with the compatibility command `litnodex pipeline --from-step 6 --to-step 11`.
 
-For development from a local checkout, use `python -m pip install -e .` instead of the Git URL.
+### Install from a source checkout
 
-## Quick start
-
-The clone-based setup remains available for development or source inspection. The commands below use the default WSL workspace expected by the launcher scripts.
+For development, clone the repository and install it into an activated WSL/Linux virtual environment:
 
 ```bash
-git clone https://github.com/13ray0914/LitNodex.git ~/desktop/review
-cd ~/desktop/review
-
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt -r requirements_v4.txt
-
-cp config.example.json config.json
+git clone https://github.com/13ray0914/LitNodex.git ~/desktop/litnodex
+cd ~/desktop/litnodex
+python -m pip install -e .
+litnodex init ~/desktop/review
 ```
 
-Install the isolated graph-analysis environment:
-
-```bash
-./scripts/install_network_env.sh
-```
-
-Start GROBID:
-
-```bash
-docker compose -f docker-compose.grobid.yml up -d
-curl http://127.0.0.1:8070/api/isalive
-```
-
-Start your local llama.cpp server and edit `config.json` if its URL or model name differs from the defaults. Then verify the environment:
-
-```bash
-python check_environment.py
-```
-
-Launch the LitNodex workspace:
-
-```bash
-./scripts/start_review_app.sh
-```
-
-The dashboard is served on the loopback interface at [http://127.0.0.1:8766](http://127.0.0.1:8766). From the dashboard you can create projects, add PDFs, start or stop analysis, curate extracted evidence, and open both graph views.
-
-On Windows, a desktop shortcut can be created once with:
-
-```bash
-./scripts/install_windows_app.sh
-```
+Then follow the graph-environment, GROBID, and server steps above from `~/desktop/review`. To create a Windows desktop shortcut, run `./scripts/install_windows_app.sh` there.
 
 ## Running the process
 
-Place PDFs in the configured raw-PDF directory or add them through the dashboard. For a full project update, use the dashboard's **Analyze / Update Selected Project** button
+Add PDFs through the dashboard, select a project, and choose **Analyze / Update Selected Project**.
 
-<img width="1919" height="1063" alt="Image" src="https://github.com/user-attachments/assets/551e3632-60cc-4b6c-b98b-02439b320a18" />
+<img width="1919" height="1063" alt="LitNodex project analysis dashboard" src="https://github.com/user-attachments/assets/551e3632-60cc-4b6c-b98b-02439b320a18" />
 
-or run:
+For command-line processing:
 
 ```bash
 ./scripts/run_review_pipeline.sh
@@ -231,11 +162,11 @@ Completed stages are reused when their input, prompt, schema, model, and configu
 
 ## Graph interfaces
 
-The Literature Network combines citation, semantic, claim, property, method, keyword, and bibliographic-coupling layers. Leiden clustering always uses the complete selected layers; display sparsification affects only canvas rendering. The saved layout first arranges papers inside each Leiden community, then separates community centroids so cluster boundaries remain visible. Search results can be highlighted as a group—for example, every paper matching an author query—without changing clustering.
+**Literature Network:** combine citation, semantic, claim, property, method, keyword, and bibliographic-coupling layers. Adjust the selected layers and Leiden resolution to explore communities. Display sparsification and search highlighting do not change clustering.
 
-`review_required` is an automatic validation flag, not a failed analysis. Open the Curation Editor, review errors before warnings, correct or reject affected claims, and record a separate human decision. Automatic validation reports remain unchanged as an audit record; an approved human decision is shown separately in the network.
+**Scientific Knowledge Graph:** explore connections among papers, claims, properties, methods, systems, measurements, and visual evidence. Progressive expansion and Fast/Balanced/Full modes control rendering without removing exported data.
 
-The Scientific Knowledge Graph connects papers to claims, properties, methods, systems, measurements, and visual evidence. Its progressive expansion and Fast/Balanced/Full modes keep large graphs interactive without deleting scientific data from the export.
+A `review_required` flag means automatic validation found items to inspect. Use the Curation Editor to correct or reject them and record a human decision; the original validation report remains available for audit.
 
 ```bash
 ./scripts/open_network_gui.sh
