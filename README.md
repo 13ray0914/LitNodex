@@ -8,7 +8,7 @@ LitNodex is a local-first, evidence-traceable literature review workspace. It tu
 
 > [日本語README](README_JA.md) · [v4の詳細な日本語ガイド](README_V4_JA.md)
 
-<img width="1919" height="1063" alt="Image" src="https://github.com/user-attachments/assets/551e3632-60cc-4b6c-b98b-02439b320a18" />
+<img width="1919" height="1063" alt="Image" src="https://github.com/user-attachments/assets/b617d53b-875e-4842-9350-18879b1823e9" />
 
 ## Why LitNodex?
 
